@@ -12,13 +12,13 @@ from postproc import ekstrak_nutrisi, konversi_ke_100g, cek_kesehatan_bpom, post
 # === LOAD MODEL ===
 @st.cache_resource
 def load_model():
-    return YOLO("path/to/best.pt")
+    return YOLO("tabledet_model/best.pt")
 
 model_yolo = load_model()
 
 @st.cache_resource
 def load_ocr():
-    return PaddleOCR(use_angle_cls=False, lang="en", show_log=False)
+    return PaddleOCR(use_angle_cls=False, lang="en", show_log=False, rec_model_dir='infer_pp-ocrv3_rec')
 
 ocr = load_ocr()
 
