@@ -193,51 +193,25 @@ def cek_kesehatan_bpom(kategori, nutrisi_dict):
 
     return hasil
 
-def postproc_paddle(paddle_result, y_thresh=15, x_thresh=15):
-    """
-    Gabungkan hasil PaddleOCR berdasarkan posisi y dan x agar menyerupai struktur tabel.
-    """
-    if not paddle_result or not paddle_result[0]:
-        return ""
+def auto_tidy_for_extraction(text):
+    lines = text.split("\n")
+    structured_lines = []
+    buffer = ""
 
-    lines = []
-    current_line = []
-    prev_y = None
-
-    # Urutkan dari atas ke bawah
-    sorted_results = sorted(paddle_result[0], key=lambda r: (r[0][0][1], r[0][0][0]))
-
-    for box, (text, conf) in sorted_results:
-        y = int(box[0][1])
-        if prev_y is None or abs(y - prev_y) <= y_thresh:
-            current_line.append((box, text))
-            prev_y = y
-        else:
-            lines.append(current_line)
-            current_line = [(box, text)]
-            prev_y = y
-
-    if current_line:
-        lines.append(current_line)
-
-    final_lines = []
     for line in lines:
-        line_sorted = sorted(line, key=lambda r: r[0][0][0])  # sort by x
-        merged_line = []
-        prev_x = None
-        current_phrase = ""
-
-        for box, text in line_sorted:
-            x = int(box[0][0])
-            if prev_x is None or abs(x - prev_x) <= x_thresh:
-                current_phrase += " " + text
+        line = line.strip()
+        if re.search(r"\d+\s*(g|mg|kkal|%)", line.lower()):
+            if buffer:
+                structured_lines.append(f"{buffer} {line}")
+                buffer = ""
             else:
-                merged_line.append(current_phrase.strip())
-                current_phrase = text
-            prev_x = x
+                structured_lines.append(line)
+        else:
+            if buffer:
+                structured_lines.append(buffer)  # flush jika tidak ada nilai
+            buffer = line
 
-        if current_phrase:
-            merged_line.append(current_phrase.strip())
-        final_lines.append(" ".join(merged_line))
+    if buffer:
+        structured_lines.append(buffer)
 
-    return "\n".join(final_lines)
+    return "\n".join(structured_lines)

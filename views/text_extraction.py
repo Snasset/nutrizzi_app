@@ -7,7 +7,7 @@ from ultralytics import YOLO
 from paddleocr import PaddleOCR
 import re
 
-from postproc import ekstrak_nutrisi, konversi_ke_100g, cek_kesehatan_bpom, postproc_paddle
+from postproc import ekstrak_nutrisi, konversi_ke_100g, cek_kesehatan_bpom, auto_tidy_for_extraction
 import asyncio
 try:
     asyncio.get_running_loop()
@@ -71,11 +71,11 @@ if uploaded_file:
 
                     with st.spinner("🔎 Menjalankan PaddleOCR..."):
                         ocr_raw = ocr.ocr(crop_bgr, cls=False)
-                    ocr_cleaned = postproc_paddle(ocr_raw)
-                    text_out = ocr_cleaned
+                    text_out = ocr_raw
                     st.session_state["crop_image"] = Image.open(temp_path)
-                    st.session_state["ocr_raw"] = text_out
-                    st.session_state["nutrisi"] = ekstrak_nutrisi(text_out)
+                    st.session_state["ocr_raw"] = ocr_raw
+                    cleaned_for_extraction = auto_tidy_for_extraction(text_out)
+                    st.session_state["nutrisi"] = ekstrak_nutrisi(cleaned_for_extraction)
                     st.image(temp_path, caption="📋 Tabel Nutrisi Ter-crop", width=350)
                     st.code(text_out)
                     os.remove(temp_path)
