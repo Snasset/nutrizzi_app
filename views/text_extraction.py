@@ -49,16 +49,13 @@ uploaded_file = st.file_uploader("Upload Gambar", type=["jpg", "jpeg", "png"], k
 
 if uploaded_file:
     image = Image.open(uploaded_file).convert("RGB")
-    target_max_dim = 1080  
     width, height = image.size
-    max_dim = max(width, height)
-
-    if max_dim != target_max_dim:
-        scale = target_max_dim / max_dim
+    if max(width, height) > 1080:
+        scale = 1080 / max(width, height)
         new_width = int(width * scale)
         new_height = int(height * scale)
         image = image.resize((new_width, new_height))
-        img_np = np.array(image) 
+    img_np = np.array(image) 
     st.image(image, caption="📷 Gambar Diupload", use_column_width=True)
     if st.button("🔍 Jalankan Proses"):
                 img_bgr = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)
@@ -67,8 +64,7 @@ if uploaded_file:
                 if results and results[0].boxes is not None:
                     box = max(results[0].boxes, key=lambda b: b.conf[0])
                     x1, y1, x2, y2 = map(int, box.xyxy[0])
-                    crop = img_np[y1:y2, x1:x2]
-                    crop_bgr = cv2.cvtColor(crop, cv2.COLOR_RGB2BGR)
+                    crop_bgr = img_np[y1:y2, x1:x2]
                     temp_path = "paddle_tmp.png"
                     Image.fromarray(crop_bgr).save(temp_path)
 
