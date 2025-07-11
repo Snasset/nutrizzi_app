@@ -10,12 +10,17 @@ import re
 from postproc import ekstrak_nutrisi, konversi_ke_100g, cek_kesehatan_bpom, postproc_paddle
 
 # === LOAD MODEL ===
-model_yolo = YOLO("tabledet_model/best.pt")
-ocr = PaddleOCR(
-    rec_model_dir='infer_pp-ocrv3_rec',
-    lang='en',
-    use_textline_orientation=False
-)
+@st.cache_resource
+def load_model():
+    return YOLO("path/to/best.pt")
+
+model_yolo = load_model()
+
+@st.cache_resource
+def load_ocr():
+    return PaddleOCR(use_angle_cls=False, lang="en", show_log=False)
+
+ocr = load_ocr()
 
 # === STREAMLIT UI ===
 
@@ -40,7 +45,13 @@ uploaded_file = st.file_uploader("Upload Gambar", type=["jpg", "jpeg", "png"], k
 
 if uploaded_file:
     image = Image.open(uploaded_file).convert("RGB")
-    img_np = np.array(image)
+    max_width = 640
+    if image.width > max_width:
+        ratio = max_width / image.width
+        new_size = (max_width, int(image.height * ratio))
+        image = image.resize(new_size)
+
+    img_np = np.array(image) 
     st.image(image, caption="📷 Gambar Diupload", use_column_width=True)
     if st.button("🔍 Jalankan Proses"):
                 img_bgr = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)
