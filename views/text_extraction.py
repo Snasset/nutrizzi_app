@@ -12,7 +12,7 @@ from postproc import ekstrak_nutrisi, konversi_ke_100g, cek_kesehatan_bpom, post
 # === LOAD MODEL ===
 model_yolo = YOLO("tabledet_model/best.pt")
 ocr = PaddleOCR(
-    rec_model_dir='/infer_pp-ocrv3_rec',
+    rec_model_dir='infer_pp-ocrv3_rec',
     lang='en',
     use_textline_orientation=False
 )
