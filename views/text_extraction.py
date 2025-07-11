@@ -49,13 +49,16 @@ uploaded_file = st.file_uploader("Upload Gambar", type=["jpg", "jpeg", "png"], k
 
 if uploaded_file:
     image = Image.open(uploaded_file).convert("RGB")
+    target_max_dim = 1080  
     width, height = image.size
-    if max(width, height) > 1024:
-        scale = 1024 / max(width, height)
+    max_dim = max(width, height)
+
+    if max_dim != target_max_dim:
+        scale = target_max_dim / max_dim
         new_width = int(width * scale)
         new_height = int(height * scale)
         image = image.resize((new_width, new_height))
-    img_np = np.array(image) 
+        img_np = np.array(image) 
     st.image(image, caption="📷 Gambar Diupload", use_column_width=True)
     if st.button("🔍 Jalankan Proses"):
                 img_bgr = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)
