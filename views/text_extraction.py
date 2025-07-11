@@ -45,16 +45,11 @@ uploaded_file = st.file_uploader("Upload Gambar", type=["jpg", "jpeg", "png"], k
 
 if uploaded_file:
     image = Image.open(uploaded_file).convert("RGB")
-    max_width = 640
-    if image.width > max_width:
-        ratio = max_width / image.width
-        new_size = (max_width, int(image.height * ratio))
-        image = image.resize(new_size)
-
     img_np = np.array(image) 
     st.image(image, caption="📷 Gambar Diupload", use_column_width=True)
     if st.button("🔍 Jalankan Proses"):
-                img_bgr = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)
+                resized_for_yolo = cv2.resize(img_np, (640, 640))
+                img_bgr = cv2.cvtColor(resized_for_yolo, cv2.COLOR_RGB2BGR)
                 results = model_yolo(img_bgr)
 
                 if results and results[0].boxes is not None:
