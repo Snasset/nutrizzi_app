@@ -8,7 +8,11 @@ from paddleocr import PaddleOCR
 import re
 
 from postproc import ekstrak_nutrisi, konversi_ke_100g, cek_kesehatan_bpom, postproc_paddle
-
+import asyncio
+try:
+    asyncio.get_running_loop()
+except RuntimeError:
+    asyncio.set_event_loop(asyncio.new_event_loop())
 # === LOAD MODEL ===
 @st.cache_resource
 def load_model():
@@ -45,11 +49,16 @@ uploaded_file = st.file_uploader("Upload Gambar", type=["jpg", "jpeg", "png"], k
 
 if uploaded_file:
     image = Image.open(uploaded_file).convert("RGB")
+    width, height = image.size
+    if max(width, height) > 1024:
+        scale = 1024 / max(width, height)
+        new_width = int(width * scale)
+        new_height = int(height * scale)
+        image = image.resize((new_width, new_height))
     img_np = np.array(image) 
     st.image(image, caption="📷 Gambar Diupload", use_column_width=True)
     if st.button("🔍 Jalankan Proses"):
-                resized_for_yolo = cv2.resize(img_np, (640, 640))
-                img_bgr = cv2.cvtColor(resized_for_yolo, cv2.COLOR_RGB2BGR)
+                img_bgr = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)
                 results = model_yolo(img_bgr)
 
                 if results and results[0].boxes is not None:
