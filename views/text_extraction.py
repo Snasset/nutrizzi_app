@@ -22,7 +22,7 @@ model_yolo = load_model()
 
 @st.cache_resource
 def load_ocr():
-    return PaddleOCR(use_angle_cls=False, lang="en", show_log=False, rec_model_dir='infer_pp-ocrv3_rec')
+    return PaddleOCR(lang="en", rec_model_dir='infer_pp-ocrv3_rec')
 
 ocr = load_ocr()
 
@@ -70,10 +70,10 @@ if uploaded_file:
                     Image.fromarray(crop_bgr).save(temp_path)
 
                     with st.spinner("🔎 Menjalankan PaddleOCR..."):
-                        ocr_raw = ocr.ocr(crop_bgr, cls=False)
-                    text_out = ocr_raw
+                        ocr_raw = ocr.ocr(crop_bgr)
+                    text_out = "\n".join([line[1][0] for line in ocr_raw[0]])
                     st.session_state["crop_image"] = Image.open(temp_path)
-                    st.session_state["ocr_raw"] = ocr_raw
+                    st.session_state["ocr_raw"] = text_out
                     cleaned_for_extraction = auto_tidy_for_extraction(text_out)
                     st.session_state["nutrisi"] = ekstrak_nutrisi(cleaned_for_extraction)
                     st.image(temp_path, caption="📋 Tabel Nutrisi Ter-crop", width=350)
