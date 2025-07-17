@@ -56,7 +56,7 @@ if uploaded_file:
         new_height = int(height * scale)
         image = image.resize((new_width, new_height))
     img_np = np.array(image) 
-    st.image(image, caption="📷 Gambar Diupload", use_column_width=True)
+    st.image(image, caption="📷 Gambar Diupload", use_container_width=True)
     if st.button("🔍 Jalankan Proses"):
                 img_bgr = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)
                 results = model_yolo(img_bgr)
