@@ -22,7 +22,7 @@ model_yolo = load_model()
 
 @st.cache_resource
 def load_ocr():
-    return PaddleOCR(lang="en", rec_model_dir='infer_pp-ocrv3_rec')
+    return PaddleOCR(lang="en", rec_model_dir='infer_pp-ocrv3_rec', use_angle_cls=False)
 
 ocr = load_ocr()
 
