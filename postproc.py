@@ -7,7 +7,7 @@ def ekstrak_nutrisi(text):
     targets = {
         "Takaran Saji": [r"takaran saji", r"serving size"],
         "Energi": [r"energi(?:\s*total)?", r"calories?", r"energy"],
-        "Lemak": [r"(?<!dari\s)lemak(?:\s*total)?", r"(?<!from\s)fat(?:\s*total)?"],
+        "Lemak": [r"(?<!dari\s)lemak(?:\s*total)?", r"(?<!from\s)total\s*fat"],
         "Gula": [r"gula(?:\s*total)?", r"sugars?"],
         "Serat": [r"serat(?:\s*total)?", r"fib(?:er|re)"],
         "Garam": [r"garam(?:\s*total)?", r"salt", r"sodium"],
