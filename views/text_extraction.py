@@ -91,8 +91,8 @@ if "nutrisi" in st.session_state:
         "Minuman Siap Konsumsi", "Pasta & Mi Instan", "Susu Bubuk Plain", "Susu Bubuk Rasa",
         "Keju", "Yogurt Plain", "Yogurt Rasa", "Serbuk Minuman Sereal", "Oatmeal",
         "Sereal Siap Santap (Flake/Keping)", "Sereal Batang (Bar)", "Granola",
-        "Biskuit dan Kukis", "Roti dan Produk Roti", "Kue (Kue Kering dan Lembut)",
-        "Puding Siap Santap", "Sambal", "Kecap Manis", "Makanan Ringan Siap Santap", "Olahan Kacang",
+        "Biskuit Renyah", "Biskuit Marie, Kukis, dan Wafer", "Krekers",
+        "Puding dan Nata/jeli Siap Santap", "Sambal", "Kecap Manis", "Makanan Ringan Siap Santap", "Olahan Kacang",
         "Bubuk Minuman Cokelat","Es Krim"
     ])
 
