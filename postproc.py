@@ -7,7 +7,7 @@ def ekstrak_nutrisi(text):
     targets = {
         "Takaran Saji": [r"takaran(?:\s+saji)?", r"serving(?:\s+size)?"],
         "Energi": [r"energi(?:\s*total)?", r"calories?", r"energy"],
-        "Lemak": [r"(?<!dari\s)lemak(?:\s*total)?", r"(?<!from\s)total\s*fat"],
+        "Lemak": [r"\blemak\s*total\b",  r"(?<!from\s)total\s*fat",r"\blemak\b"],
         "Gula": [r"gula(?:\s*total)?", r"sugars?"],
         "Serat": [r"serat(?:\s*total)?", r"fib(?:er|re)"],
         "Garam": [r"garam(?:\s*total)?", r"salt", r"sodium"],
@@ -18,7 +18,7 @@ def ekstrak_nutrisi(text):
 
     for label, patterns in targets.items():
         for pattern in patterns:
-            match = re.search( rf"{pattern}.*?(\d+\.?\d*)\s*(g|mg|ml|kkal|kcal)",cleaned_text)
+            match = re.search( rf"{pattern}.*?(\d+\.?\d*)\s*(g|mg|ml|kkal|kcal|%)",cleaned_text)
             if match:
                 try:
                     val = float(match.group(1))
