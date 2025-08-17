@@ -143,6 +143,18 @@ def cek_kesehatan_bpom(kategori, nutrisi_dict):
         "Makanan Ringan Siap Santap": {
             "Lemak": {"max": 20.0},
             "Garam": {"max": 400.0}
+        },
+        "Olahan Kacang": {  
+            "Lemak": {"max": 40.0, "satuan": "g/100g"},
+            "Garam": {"max": 250.0, "satuan": "mg/100g"}
+        },
+        "Bubuk Minuman Cokelat": {
+            "Lemak": {"max": 9.0, "satuan": "g/100g"},
+            "Gula": {"max": 45.0, "satuan": "g/100g"}
+        },
+        "Es Krim": {
+            "Lemak": {"max": 10.0, "satuan": "g/100g"},
+            "Gula": {"max": 17.0, "satuan": "g/100g"}
         }
     }
 
