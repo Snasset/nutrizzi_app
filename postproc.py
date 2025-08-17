@@ -64,7 +64,7 @@ def cek_kesehatan_bpom(kategori, nutrisi_dict):
         },
         "Pasta & Mi Instan": {
             "Lemak": {"max": 20.0, "satuan": "g/100g"},
-            "Garam": {"max": 0.9, "satuan": "mg/100g"}
+            "Garam": {"max": 0.9, "satuan": "g/100g"}
         },
         "Susu Bubuk Plain": {
             "Gula": {"max": 12.5, "satuan": "g/100g"},
@@ -76,7 +76,7 @@ def cek_kesehatan_bpom(kategori, nutrisi_dict):
         },
         "Keju": {
             "Lemak": {"max": 30.0, "satuan": "g/100g"},
-            "Garam": {"max": 0.9, "satuan": "mg/100g"},
+            "Garam": {"max": 0.9, "satuan": "g/100g"},
             "Kalsium": {"min": 15.0, "satuan": "% AKG/100g"}
         },
         "Yogurt Plain": {
