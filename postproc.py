@@ -75,7 +75,6 @@ def cek_kesehatan_bpom(kategori, nutrisi_dict):
             "Kalsium": {"min": 15.0, "satuan": "% AKG/100g"}
         },
         "Keju": {
-            "Lemak": {"max": 30.0, "satuan": "g/100g"},
             "Garam": {"max": 0.9, "satuan": "g/100g"},
             "Kalsium": {"min": 15.0, "satuan": "% AKG/100g"}
         },
@@ -95,8 +94,8 @@ def cek_kesehatan_bpom(kategori, nutrisi_dict):
             "Serat": {"min": 3.0, "satuan": "g/100g"}
         },
         "Oatmeal": {
-            "Gula": {"max": 10.0, "satuan": "g/100g"},
-            "Garam": {"max": 0.12, "satuan": "g/100g"},
+            "Gula": {"max": 4.0, "satuan": "g/100g"},
+            "Garam": {"max": 0.01, "satuan": "g/100g"},
             "Serat": {"min": 3.0, "satuan": "g/100g"}
         },
         "Sereal Siap Santap (Flake/Keping)": {
@@ -110,28 +109,29 @@ def cek_kesehatan_bpom(kategori, nutrisi_dict):
             "Serat": {"min": 3.0}
         },
         "Granola": {
-            "Lemak": {"max": 9.0},
-            "Gula": {"max": 25.0},
+            "Lemak": {"max": 10.0},
+            "Gula": {"max": 15.0},
             "Serat": {"min": 3.0}
         },
-        "Biskuit dan Kukis": {
+        "Biskuit": {
             "Lemak": {"max": 20.0},
             "Gula": {"max": 20.0},
-            "Garam": {"max": 0.3},
+            "Garam": {"max": 300},
             "Serat": {"min": 3.0}
         },
-        "Roti dan Produk Roti": {
+        "Biskuit Marie, Kukis, dan Wafer": {
             "Lemak": {"max": 10.0},
             "Gula": {"max": 15.0},
             "Garam": {"max": 0.3}
         },
-        "Kue (Kue Kering dan Lembut)": {
+        "Krekers": {
             "Lemak": {"max": 15.0},
-            "Gula": {"max": 25.0}
+            "Gula": {"max": 7.0},
+            "Garam": {"max": 500},
+            "Serat": {"min": 3.0}
         },
-        "Puding Siap Santap": {
-            "Lemak": {"max": 5.0},
-            "Gula": {"max": 10.0}
+        "Puding dan Nata/jeli Siap Santap": {
+            "Gula": {"max": 12.0}
         },
         "Sambal": {
             "Garam": {"max": 1.2}
