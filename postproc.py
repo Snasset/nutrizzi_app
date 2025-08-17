@@ -2,7 +2,7 @@ import re
 
 def ekstrak_nutrisi(text):
     nutrisi = {}
-    cleaned_text = text.lower().replace(",", ".")
+    cleaned_text = text.lower().replace(",", ".").replace("\n"," ")
 
     targets = {
         "Takaran Saji": [r"takaran(?:\s+saji)?", r"serving(?:\s+size)?"],
