@@ -64,7 +64,7 @@ def cek_kesehatan_bpom(kategori, nutrisi_dict):
         },
         "Pasta & Mi Instan": {
             "Lemak": {"max": 20.0, "satuan": "g/100g"},
-            "Garam": {"max": 900.0, "satuan": "mg/100g"}
+            "Garam": {"max": 0.9, "satuan": "mg/100g"}
         },
         "Susu Bubuk Plain": {
             "Gula": {"max": 12.5, "satuan": "g/100g"},
@@ -76,28 +76,28 @@ def cek_kesehatan_bpom(kategori, nutrisi_dict):
         },
         "Keju": {
             "Lemak": {"max": 30.0, "satuan": "g/100g"},
-            "Garam": {"max": 900.0, "satuan": "mg/100g"},
+            "Garam": {"max": 0.9, "satuan": "mg/100g"},
             "Kalsium": {"min": 15.0, "satuan": "% AKG/100g"}
         },
         "Yogurt Plain": {
-            "Lemak": {"max": 3.0},
-            "Gula": {"max": 5.0},
-            "Kalsium": {"min": 15.0}
+            "Lemak": {"max": 3.0, "satuan": "g/100g"},
+            "Gula": {"max": 5.0, "satuan": "g/100g"},
+            "Kalsium": {"min": 15.0, "satuan": "% AKG/100g"}
         },
         "Yogurt Rasa": {
-            "Lemak": {"max": 3.0},
-            "Gula": {"max": 10.0},
-            "Kalsium": {"min": 15.0}
+            "Lemak": {"max": 3.0, "satuan": "g/100g"},
+            "Gula": {"max": 10.0, "satuan": "g/100g"},
+            "Kalsium": {"min": 15.0, "satuan": "% AKG/100g"}
         },
         "Serbuk Minuman Sereal": {
-            "Lemak": {"max": 9.0},
-            "Gula": {"max": 25.0},
-            "Serat": {"min": 3.0}
+            "Lemak": {"max": 9.0, "satuan": "g/100g"},
+            "Gula": {"max": 25.0, "satuan": "g/100g"},
+            "Serat": {"min": 3.0, "satuan": "g/100g"}
         },
         "Oatmeal": {
-            "Gula": {"max": 10.0},
-            "Garam": {"max": 120.0},
-            "Serat": {"min": 3.0}
+            "Gula": {"max": 10.0, "satuan": "g/100g"},
+            "Garam": {"max": 0.12, "satuan": "g/100g"},
+            "Serat": {"min": 3.0, "satuan": "g/100g"}
         },
         "Sereal Siap Santap (Flake/Keping)": {
             "Lemak": {"max": 4.0},
@@ -117,13 +117,13 @@ def cek_kesehatan_bpom(kategori, nutrisi_dict):
         "Biskuit dan Kukis": {
             "Lemak": {"max": 20.0},
             "Gula": {"max": 20.0},
-            "Garam": {"max": 300.0},
+            "Garam": {"max": 0.3},
             "Serat": {"min": 3.0}
         },
         "Roti dan Produk Roti": {
             "Lemak": {"max": 10.0},
             "Gula": {"max": 15.0},
-            "Garam": {"max": 300.0}
+            "Garam": {"max": 0.3}
         },
         "Kue (Kue Kering dan Lembut)": {
             "Lemak": {"max": 15.0},
@@ -134,19 +134,19 @@ def cek_kesehatan_bpom(kategori, nutrisi_dict):
             "Gula": {"max": 10.0}
         },
         "Sambal": {
-            "Garam": {"max": 1200.0}
+            "Garam": {"max": 1.2}
         },
         "Kecap Manis": {
             "Gula": {"max": 40.0},
-            "Garam": {"max": 1200.0}
+            "Garam": {"max": 1.2}
         },
         "Makanan Ringan Siap Santap": {
             "Lemak": {"max": 20.0},
-            "Garam": {"max": 400.0}
+            "Garam": {"max": 0.4}
         },
         "Olahan Kacang": {  
             "Lemak": {"max": 40.0, "satuan": "g/100g"},
-            "Garam": {"max": 250.0, "satuan": "mg/100g"}
+            "Garam": {"max": 0.25, "satuan": "g/100g"}
         },
         "Bubuk Minuman Cokelat": {
             "Lemak": {"max": 9.0, "satuan": "g/100g"},
