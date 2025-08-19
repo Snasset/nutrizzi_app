@@ -55,11 +55,23 @@ with tab1:
         st.session_state["uploaded_file"] = uploaded_file
 
 with tab2:
-    camera_file = st.camera_input("Ambil Foto dengan Kamera", key="kamera_gambar")
-    if camera_file:
-        unique_name = f"{uuid.uuid4()}_camera.png"
-        st.session_state["uploaded_file_name"] = unique_name
-        st.session_state["uploaded_file"] = camera_file
+    if "kamera_on" not in st.session_state:
+        st.session_state["kamera_on"] = False
+
+    if not st.session_state["kamera_on"]:
+        if st.button("📷 Open Camera"):
+            st.session_state["kamera_on"] = True
+            st.rerun()
+    else:
+        camera_file = st.camera_input("Ambil Foto dengan Kamera", key="kamera_gambar")
+        if st.button("❌ Close Camera"):
+            st.session_state["kamera_on"] = False
+            st.rerun()
+
+        if camera_file:
+            unique_name = f"{uuid.uuid4()}_camera.png"
+            st.session_state["uploaded_file_name"] = unique_name
+            st.session_state["uploaded_file"] = camera_file
 
 if "uploaded_file" in st.session_state:
     with st.spinner("📤 Memproses gambar..."):
