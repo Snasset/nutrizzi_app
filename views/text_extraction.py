@@ -109,15 +109,11 @@ if "uploaded_file" in st.session_state:
             st.session_state["ocr_raw"] = text_out
             cleaned_for_extraction = auto_tidy_for_extraction(text_out)
             st.session_state["nutrisi"] = ekstrak_nutrisi(cleaned_for_extraction)
-
-            st.image(temp_path, caption="📋 Tabel Nutrisi Ter-crop", width=350)
-            st.code(text_out)
             os.remove(temp_path)
         else:
             st.warning("❌ Tabel tidak ditemukan.")
                 
 if "crop_image" in st.session_state and "ocr_raw" in st.session_state:
-    st.subheader("📋 Hasil Deteksi & OCR")
     st.image(st.session_state["crop_image"], caption="📋 Tabel Nutrisi Ter-crop", width=350)
     st.code(st.session_state["ocr_raw"])
     
