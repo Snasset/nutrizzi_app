@@ -23,7 +23,7 @@ model_yolo = load_model()
 
 @st.cache_resource
 def load_ocr():
-    return PaddleOCR(lang="en", rec_model_dir='infer_pp-ocrv3_rec', use_angle_cls=False)
+    return PaddleOCR(lang="en", rec_model_dir='infer_pp-ocrv3_rec',det_model_dir="infer_pp-ocrv3_det", use_angle_cls=False)
 
 ocr = load_ocr()
 
@@ -102,8 +102,13 @@ if "uploaded_file" in st.session_state:
             st.code(text_out)
             os.remove(temp_path)
         else:
-            st.warning("❌ Tabel tidak ditemukan atau YOLO tidak mendeteksi apa pun.")
-
+            st.warning("❌ Tabel tidak ditemukan.")
+                
+if "crop_image" in st.session_state and "ocr_raw" in st.session_state:
+    st.subheader("📋 Hasil Deteksi & OCR")
+    st.image(st.session_state["crop_image"], caption="📋 Tabel Nutrisi Ter-crop", width=350)
+    st.code(st.session_state["ocr_raw"])
+    
 if "nutrisi" in st.session_state:
     st.subheader("🧪 Koreksi & Evaluasi Nutrisi")
 
