@@ -6,6 +6,7 @@ import streamlit as st
 from ultralytics import YOLO
 from paddleocr import PaddleOCR
 import re
+import uuid
 
 from postproc import ekstrak_nutrisi, konversi_ke_100g, cek_kesehatan_bpom, auto_tidy_for_extraction
 import asyncio
@@ -13,7 +14,7 @@ try:
     asyncio.get_running_loop()
 except RuntimeError:
     asyncio.set_event_loop(asyncio.new_event_loop())
-# === LOAD MODEL ===
+
 @st.cache_resource
 def load_model():
     return YOLO("tabledet_model/best.pt")
@@ -25,8 +26,6 @@ def load_ocr():
     return PaddleOCR(lang="en", rec_model_dir='infer_pp-ocrv3_rec', use_angle_cls=False)
 
 ocr = load_ocr()
-
-# === STREAMLIT UI ===
 
 st.markdown("""
     <style>
@@ -44,46 +43,67 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.title("Ekstraksi dan Evaluasi Informasi Nilai Gizi")
-st.subheader("📤 Upload Gambar Label Nutrisi")
-uploaded_file = st.file_uploader("Upload Gambar", type=["jpg", "jpeg", "png"], key="upload_gambar")
+st.subheader("📤 Upload atau Ambil Foto Label Nutrisi")
 
-if uploaded_file:
-    image = Image.open(uploaded_file).convert("RGB")
-    width, height = image.size
-    if max(width, height) > 1080:
-        scale = 1080 / max(width, height)
-        new_width = int(width * scale)
-        new_height = int(height * scale)
-        image = image.resize((new_width, new_height))
-    img_np = np.array(image) 
-    st.image(image, caption="📷 Gambar Diupload", use_container_width=True)
+tab1, tab2 = st.tabs(["Upload File", "Kamera"])
+
+with tab1:
+    uploaded_file = st.file_uploader("Upload Gambar", type=["jpg", "jpeg", "png"], key="upload_gambar")
+    if uploaded_file:
+        unique_name = f"{uuid.uuid4()}_{uploaded_file.name}"
+        st.session_state["uploaded_file_name"] = unique_name
+        st.session_state["uploaded_file"] = uploaded_file
+
+with tab2:
+    camera_file = st.camera_input("Ambil Foto dengan Kamera", key="kamera_gambar")
+    if camera_file:
+        unique_name = f"{uuid.uuid4()}_camera.png"
+        st.session_state["uploaded_file_name"] = unique_name
+        st.session_state["uploaded_file"] = camera_file
+
+if "uploaded_file" in st.session_state:
+    with st.spinner("📤 Memproses gambar..."):
+        image = Image.open(st.session_state["uploaded_file"]).convert("RGB")
+        width, height = image.size
+        if max(width, height) > 1080:
+            scale = 1080 / max(width, height)
+            new_width = int(width * scale)
+            new_height = int(height * scale)
+            image = image.resize((new_width, new_height))
+        img_np = np.array(image) 
+        st.image(image, caption="📷 Gambar Diupload", use_container_width=True)
+
     if st.button("🔍 Jalankan Proses"):
-                img_bgr = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)
-                results = model_yolo(img_bgr)
+        with st.spinner("🚀 Inference YOLO berjalan..."):
+            img_bgr = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)
+            results = model_yolo(img_bgr)
 
-                if results and results[0].boxes is not None:
-                    box = max(results[0].boxes, key=lambda b: b.conf[0])
-                    x1, y1, x2, y2 = map(int, box.xyxy[0])
-                    crop_bgr = img_np[y1:y2, x1:x2]
-                    temp_path = "paddle_tmp.png"
-                    Image.fromarray(crop_bgr).save(temp_path)
+        if results and results[0].boxes is not None and len(results[0].boxes) > 0:
+            box = max(results[0].boxes, key=lambda b: b.conf[0])
+            x1, y1, x2, y2 = map(int, box.xyxy[0])
+            crop_bgr = img_np[y1:y2, x1:x2]
+            temp_path = "paddle_tmp.png"
+            Image.fromarray(crop_bgr).save(temp_path)
 
-                    with st.spinner("🔎 Menjalankan PaddleOCR..."):
-                        ocr_raw = ocr.ocr(crop_bgr)
-                    text_out = "\n".join([line[1][0] for line in ocr_raw[0]])
-                    st.session_state["crop_image"] = Image.open(temp_path)
-                    st.session_state["ocr_raw"] = text_out
-                    cleaned_for_extraction = auto_tidy_for_extraction(text_out)
-                    st.session_state["nutrisi"] = ekstrak_nutrisi(cleaned_for_extraction)
-                    st.image(temp_path, caption="📋 Tabel Nutrisi Ter-crop", width=350)
-                    st.code(text_out)
-                    os.remove(temp_path)
-                else:
-                    st.warning("❌ Tabel tidak ditemukan.")
+            with st.spinner("🔎 Menjalankan PaddleOCR..."):
+                ocr_raw = ocr.ocr(crop_bgr)
 
+            if ocr_raw and len(ocr_raw[0]) > 0:
+                text_out = "\n".join([line[1][0] for line in ocr_raw[0]])
+            else:
+                text_out = "❌ OCR tidak menemukan teks."
 
+            st.session_state["crop_image"] = Image.open(temp_path)
+            st.session_state["ocr_raw"] = text_out
+            cleaned_for_extraction = auto_tidy_for_extraction(text_out)
+            st.session_state["nutrisi"] = ekstrak_nutrisi(cleaned_for_extraction)
 
-# === EVALUASI ===
+            st.image(temp_path, caption="📋 Tabel Nutrisi Ter-crop", width=350)
+            st.code(text_out)
+            os.remove(temp_path)
+        else:
+            st.warning("❌ Tabel tidak ditemukan atau YOLO tidak mendeteksi apa pun.")
+
 if "nutrisi" in st.session_state:
     st.subheader("🧪 Koreksi & Evaluasi Nutrisi")
 
@@ -95,7 +115,6 @@ if "nutrisi" in st.session_state:
         "Puding dan Nata/jeli Siap Santap", "Sambal", "Kecap Manis", "Makanan Ringan Siap Santap", "Olahan Kacang",
         "Bubuk Minuman Cokelat","Es Krim"
     ])
-
 
     label_nutrisi_fix = [
         "Takaran Saji", "Energi", "Lemak", "Gula", "Serat",
@@ -117,7 +136,6 @@ if "nutrisi" in st.session_state:
 
             if takaran is None:
                 raise ValueError
-
         except:
             st.error("❌ Takaran Saji harus berupa angka.")
             st.stop()
